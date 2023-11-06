@@ -1,7 +1,6 @@
-rootProject.name = 'project_name'
+rootProject.name = 'krontab.predictor'
 
 String[] includes = [
-    ":lib"
 ]
 
 
