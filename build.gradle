@@ -63,6 +63,8 @@ kotlin {
             dependencies {
                 implementation libs.kotlin
                 api libs.kotlin.serialization
+                api libs.krontab
+                api libs.navigation
                 api(compose.runtime)
             }
         }

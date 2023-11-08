@@ -1,20 +1,21 @@
 package dev.inmo.krontab.predictor
 
 import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import dev.inmo.krontab.predictor.ui.main.MainViewModel
 
 fun main(args: Array<String>) = application {
+    val viewModel = MainViewModel()
     Window(onCloseRequest = ::exitApplication, title = "Kotlin Multiplatform Publishing Builder") {
         MaterialTheme(
             Colors(
@@ -44,10 +45,13 @@ fun main(args: Array<String>) = application {
                         .fillMaxSize()
                         .verticalScroll(stateVertical)
                 ) {
-                    Column {
-                        Text("Hello world")
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        TextField(viewModel.secondsState.value, { viewModel.secondsState.value = it })
+                        TextField(viewModel.minutesState.value, { viewModel.minutesState.value = it })
+                        TextField(viewModel.hoursState.value, { viewModel.hoursState.value = it })
+                        TextField(viewModel.daysState.value, { viewModel.daysState.value = it })
+                        TextField(viewModel.monthsState.value, { viewModel.monthsState.value = it })
                     }
-
                 }
 
                 VerticalScrollbar(
