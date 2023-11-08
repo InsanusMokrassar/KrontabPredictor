@@ -2,10 +2,12 @@
 
 kotlin = "1.9.20"
 kotlin-serialization = "1.6.0"
+kotlin-coroutines = "1.7.3"
 jb-compose = "1.5.10"
 
 krontab = "2.2.3"
 navigation = "0.3.1"
+microutils = "0.20.12"
 
 dokka = "1.9.10"
 
@@ -23,6 +25,7 @@ android-buildTools = "34.0.0"
 
 kotlin = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
 kotlin-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlin-serialization" }
+kotlin-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlin-coroutines" }
 kotlin-test-common = { module = "org.jetbrains.kotlin:kotlin-test-common", version.ref = "kotlin" }
 kotlin-test-annotations-common = { module = "org.jetbrains.kotlin:kotlin-test-annotations-common", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
@@ -34,6 +37,7 @@ jb-compose-material3-js = { module = "org.jetbrains.compose.material3:material3-
 
 krontab = { module = "dev.inmo:krontab", version.ref = "krontab" }
 navigation = { module = "dev.inmo:navigation.mvvm", version.ref = "navigation" }
+microutils-common-compose = { module = "dev.inmo:micro_utils.common.compose", version.ref = "microutils" }
 
 # buildscript classpaths
 

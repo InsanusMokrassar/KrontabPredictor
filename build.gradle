@@ -64,6 +64,7 @@ kotlin {
                 implementation libs.kotlin
                 api libs.kotlin.serialization
                 api libs.krontab
+                api libs.microutils.common.compose
                 api libs.navigation
                 api(compose.runtime)
             }
@@ -78,6 +79,7 @@ kotlin {
             dependencies {
                 implementation(compose.desktop.currentOs)
                 api libs.jb.compose.material3.desktop
+                api libs.kotlin.coroutines.swing
             }
         }
         jvmTest {

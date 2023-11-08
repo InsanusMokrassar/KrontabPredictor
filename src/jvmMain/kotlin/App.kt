@@ -2,17 +2,24 @@ package dev.inmo.krontab.predictor
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import dev.inmo.krontab.predictor.ui.main.MainViewModel
+import korlibs.time.format
 
 fun main(args: Array<String>) = application {
     val viewModel = MainViewModel()
@@ -38,19 +45,60 @@ fun main(args: Array<String>) = application {
                 Modifier.fillMaxSize()
                     .background(color = Color(245, 245, 245))
             ) {
-
                 val stateVertical = rememberScrollState(0)
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(stateVertical)
-                ) {
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        TextField(viewModel.secondsState.value, { viewModel.secondsState.value = it })
-                        TextField(viewModel.minutesState.value, { viewModel.minutesState.value = it })
-                        TextField(viewModel.hoursState.value, { viewModel.hoursState.value = it })
-                        TextField(viewModel.daysState.value, { viewModel.daysState.value = it })
-                        TextField(viewModel.monthsState.value, { viewModel.monthsState.value = it })
+
+                Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
+                    Row(Modifier.width(450.dp), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                        OutlinedTextField(
+                            value = viewModel.secondsUIState.value,
+                            onValueChange = { viewModel.secondsState.value = it },
+                            modifier = Modifier.weight(1f),
+                            textStyle = TextStyle.Default.copy(
+                                textAlign = TextAlign.Center
+                            )
+                        )
+                        OutlinedTextField(
+                            value = viewModel.minutesUIState.value,
+                            onValueChange = { viewModel.minutesState.value = it },
+                            modifier = Modifier.weight(1f),
+                            textStyle = TextStyle.Default.copy(
+                                textAlign = TextAlign.Center
+                            )
+                        )
+                        OutlinedTextField(
+                            value = viewModel.hoursUIState.value,
+                            onValueChange = { viewModel.hoursState.value = it },
+                            modifier = Modifier.weight(1f),
+                            textStyle = TextStyle.Default.copy(
+                                textAlign = TextAlign.Center
+                            )
+                        )
+                        OutlinedTextField(
+                            value = viewModel.daysUIState.value,
+                            onValueChange = { viewModel.daysState.value = it },
+                            modifier = Modifier.weight(1f),
+                            textStyle = TextStyle.Default.copy(
+                                textAlign = TextAlign.Center
+                            )
+                        )
+                        OutlinedTextField(
+                            value = viewModel.monthsUIState.value,
+                            onValueChange = { viewModel.monthsState.value = it },
+                            modifier = Modifier.weight(1f),
+                            textStyle = TextStyle.Default.copy(
+                                textAlign = TextAlign.Center
+                            )
+                        )
+                    }
+                    LazyVerticalGrid(GridCells.Fixed(2), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                        items(viewModel.schedule) {
+                            Row(
+                                Modifier.fillMaxWidth(),
+                                Arrangement.Center
+                            ) {
+                                Text(DateTimeFormatter.default.format(it))
+                            }
+                        }
                     }
                 }
 
