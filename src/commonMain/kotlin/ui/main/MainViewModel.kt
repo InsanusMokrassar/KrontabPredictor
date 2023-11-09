@@ -41,6 +41,7 @@ class MainViewModel {
     ).map {
         "${secondsState.value} ${minutesState.value} ${hoursState.value} ${daysState.value} ${monthsState.value}"
     }.stateIn(scope, SharingStarted.Eagerly, "* * * * *")
+    val krontabTemplateState = krontabTemplateStateFlow.asComposeState(scope)
 
     val scheduleItemsState = MutableStateFlow(10)
     val scheduleUIItemsState = scheduleItemsState.asComposeState(scope)

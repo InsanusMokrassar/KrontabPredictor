@@ -9,7 +9,10 @@ import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -48,43 +51,33 @@ fun main(args: Array<String>) = application {
                 val stateVertical = rememberScrollState(0)
 
                 Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
-                    Row(Modifier.width(450.dp), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                        OutlinedTextField(
-                            value = viewModel.secondsUIState.value,
-                            onValueChange = { viewModel.secondsState.value = it },
-                            modifier = Modifier.weight(1f),
-                            textStyle = TextStyle.Default.copy(
-                                textAlign = TextAlign.Center
-                            )
-                        )
-                        OutlinedTextField(
-                            value = viewModel.minutesUIState.value,
-                            onValueChange = { viewModel.minutesState.value = it },
-                            modifier = Modifier.weight(1f),
-                            textStyle = TextStyle.Default.copy(
-                                textAlign = TextAlign.Center
-                            )
-                        )
-                        OutlinedTextField(
-                            value = viewModel.hoursUIState.value,
-                            onValueChange = { viewModel.hoursState.value = it },
-                            modifier = Modifier.weight(1f),
-                            textStyle = TextStyle.Default.copy(
-                                textAlign = TextAlign.Center
-                            )
-                        )
-                        OutlinedTextField(
-                            value = viewModel.daysUIState.value,
-                            onValueChange = { viewModel.daysState.value = it },
-                            modifier = Modifier.weight(1f),
-                            textStyle = TextStyle.Default.copy(
-                                textAlign = TextAlign.Center
-                            )
-                        )
-                        OutlinedTextField(
-                            value = viewModel.monthsUIState.value,
-                            onValueChange = { viewModel.monthsState.value = it },
-                            modifier = Modifier.weight(1f),
+                    Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                        Row(Modifier.width(450.dp), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                            @Composable
+                            fun DrawState(state: String, onChange: (String) -> Unit) {
+                                val mutableState = remember { mutableStateOf(state) }
+                                OutlinedTextField(
+                                    value = mutableState.value,
+                                    onValueChange = {
+                                        mutableState.value = it
+                                        onChange(mutableState.value)
+                                    },
+                                    modifier = Modifier.weight(1f),
+                                    textStyle = TextStyle.Default.copy(
+                                        textAlign = TextAlign.Center
+                                    )
+                                )
+                            }
+                            DrawState(state = viewModel.secondsUIState.value, onChange = { viewModel.secondsState.value = it })
+                            DrawState(state = viewModel.minutesUIState.value, onChange = { viewModel.minutesState.value = it })
+                            DrawState(state = viewModel.hoursUIState.value, onChange = { viewModel.hoursState.value = it })
+                            DrawState(state = viewModel.daysUIState.value, onChange = { viewModel.daysState.value = it })
+                            DrawState(state = viewModel.monthsUIState.value, onChange = { viewModel.monthsState.value = it })
+                        }
+                        TextField(
+                            viewModel.krontabTemplateState.value,
+                            {},
+                            Modifier.width(450.dp),
                             textStyle = TextStyle.Default.copy(
                                 textAlign = TextAlign.Center
                             )
@@ -96,7 +89,7 @@ fun main(args: Array<String>) = application {
                                 Modifier.fillMaxWidth(),
                                 Arrangement.Center
                             ) {
-                                Text(DateTimeFormatter.default.format(it))
+                                Text(DateTimeFormatter.default.format(it.local))
                             }
                         }
                     }
