@@ -36,11 +36,11 @@ class MainViewModel(
     val monthsState = MutableStateFlow("*")
     val monthsUIState by lazy { monthsState.asComposeState(scope) }
     val yearsState = MutableStateFlow("")
-    val yearsUIState by lazy { monthsState.asComposeState(scope) }
+    val yearsUIState by lazy { yearsState.asComposeState(scope) }
     val timezoneState = MutableStateFlow("")
-    val timezoneUIState by lazy { monthsState.asComposeState(scope) }
+    val timezoneUIState by lazy { timezoneState.asComposeState(scope) }
     val weekDaysState = MutableStateFlow("")
-    val weekDaysUIState by lazy { monthsState.asComposeState(scope) }
+    val weekDaysUIState by lazy { weekDaysState.asComposeState(scope) }
     private fun String.krontabPart(suffix: String = "") = takeIf { it.isNotEmpty() } ?.let { " ${it}$suffix" } ?: ""
     private val krontabTemplateStateFlow = merge(
         secondsState,
@@ -83,21 +83,22 @@ class MainViewModel(
     private val scheduleRecalculatorMapperJob = scheduleRecalculatorMapper.launchIn(scope)
 
     fun onSetKrontabState(krontabTemplate: KrontabTemplate) {
-        val splitted = krontabTemplate.split(" ")
+        val splitted = ArrayDeque(krontabTemplate.split(" "))
 
         runCatching {
-            secondsState.value = splitted[0]
-            minutesState.value = splitted[1]
-            hoursState.value = splitted[2]
-            daysState.value = splitted[3]
-            monthsState.value = splitted[4]
-            splitted.drop(5).forEach {
+            secondsState.value = splitted.removeFirst()
+            minutesState.value = splitted.removeFirst()
+            hoursState.value = splitted.removeFirst()
+            daysState.value = splitted.removeFirst()
+            monthsState.value = splitted.removeFirst()
+            while (splitted.isNotEmpty()) {
+                val it = splitted.removeFirst()
                 when {
                     it.endsWith("o") -> {
-                        timezoneState.value = it.drop(1)
+                        timezoneState.value = it.dropLast(1)
                     }
                     it.endsWith("w") -> {
-                        weekDaysState.value = it.drop(1)
+                        weekDaysState.value = it.dropLast(1)
                     }
                     else -> {
                         yearsState.value = it

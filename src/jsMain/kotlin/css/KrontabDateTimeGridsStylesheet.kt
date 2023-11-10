@@ -4,7 +4,6 @@ import org.jetbrains.compose.web.css.CSSNumeric
 import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.StyleSheet
 import org.jetbrains.compose.web.css.display
-import org.jetbrains.compose.web.css.gap
 import org.jetbrains.compose.web.css.gridTemplateColumns
 import org.jetbrains.compose.web.css.keywords.auto
 import org.jetbrains.compose.web.css.margin
@@ -18,6 +17,7 @@ object KrontabDateTimeGridsStylesheet : StyleSheet() {
         display(DisplayStyle.Grid)
         margin(16.px, auto.unsafeCast<CSSNumeric>())
         gridTemplateColumns("1fr 1fr")
+        width(KrontabPartsStylesheet.containerWidth)
 
         child(self, selector("*")) style {
             textAlign("center")

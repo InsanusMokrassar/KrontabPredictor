@@ -5,13 +5,13 @@ import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.css.keywords.auto
 
 object KrontabPartsStylesheet : StyleSheet() {
-    val containerSize = 600.px
+    val containerWidth = 600.px
     val containerItemsGap = 16.px
     val containerItems = 8
     val container by style {
         display(DisplayStyle.Grid)
         margin(16.px, auto.unsafeCast<CSSNumeric>())
-        width(containerSize)
+        width(containerWidth)
         gridTemplateColumns(
             (0 until containerItems).joinToString(" ") { _ -> "1fr" }
         )
