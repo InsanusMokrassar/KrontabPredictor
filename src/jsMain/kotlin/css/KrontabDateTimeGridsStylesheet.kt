@@ -16,7 +16,7 @@ import org.jetbrains.compose.web.css.width
 object KrontabDateTimeGridsStylesheet : StyleSheet() {
     val container by style {
         display(DisplayStyle.Grid)
-        margin(0.px, auto.unsafeCast<CSSNumeric>())
+        margin(16.px, auto.unsafeCast<CSSNumeric>())
         gridTemplateColumns("1fr 1fr")
 
         child(self, selector("*")) style {

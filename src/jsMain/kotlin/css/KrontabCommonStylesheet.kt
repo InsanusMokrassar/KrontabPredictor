@@ -14,7 +14,7 @@ import org.jetbrains.compose.web.css.width
 
 object KrontabCommonStylesheet : StyleSheet() {
     val container by style {
-        margin(0.px, auto.unsafeCast<CSSNumeric>())
+        margin(16.px, auto.unsafeCast<CSSNumeric>())
         width(KrontabPartsStylesheet.containerSize)
         display(DisplayStyle.Grid)
         gridTemplateColumns("1fr")

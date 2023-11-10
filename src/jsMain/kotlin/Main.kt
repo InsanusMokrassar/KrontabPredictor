@@ -7,7 +7,6 @@ import dev.inmo.krontab.predictor.css.KrontabCommonStylesheet
 import dev.inmo.krontab.predictor.css.KrontabDateTimeGridsStylesheet
 import dev.inmo.krontab.predictor.css.KrontabPartsStylesheet
 import dev.inmo.krontab.predictor.ui.main.MainViewModel
-import korlibs.time.format
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.dom.appendElement
@@ -18,7 +17,6 @@ import org.jetbrains.compose.web.dom.Input
 import org.jetbrains.compose.web.dom.Label
 import org.jetbrains.compose.web.dom.Text
 import org.jetbrains.compose.web.renderComposable
-import org.w3c.dom.Location
 import org.w3c.dom.url.URLSearchParams
 
 private val urlSearchParams by lazy {
@@ -71,7 +69,6 @@ fun main() {
                         }
                     }
                 }
-
             }
             DrawState("Seconds", state = viewModel.secondsUIState.value, onChange = { viewModel.secondsState.value = it })
             DrawState("Minutes", state = viewModel.minutesUIState.value, onChange = { viewModel.minutesState.value = it })
@@ -83,6 +80,7 @@ fun main() {
             DrawState("Week\u00a0Day", state = viewModel.weekDaysUIState.value, onChange = { viewModel.weekDaysState.value = it })
         }
         Div({ classes(KrontabCommonStylesheet.container) }) {
+            Label { Text("Krontab") }
             Input(InputType.Text) {
                 value(viewModel.krontabTemplateState.value)
             }
@@ -90,7 +88,7 @@ fun main() {
         Div({ classes(KrontabDateTimeGridsStylesheet.container) }) {
             viewModel.schedule.forEach {
                 Label {
-                    Text(DateTimeFormatter.default.format(it.local))
+                    Text(DateTimeFormatter.local.format(it.local))
                 }
             }
         }

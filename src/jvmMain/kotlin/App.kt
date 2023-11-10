@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import dev.inmo.krontab.predictor.ui.main.MainViewModel
-import korlibs.time.format
 
 fun main(args: Array<String>) = application {
     val viewModel = MainViewModel()
@@ -89,7 +88,7 @@ fun main(args: Array<String>) = application {
                                 Modifier.fillMaxWidth(),
                                 Arrangement.Center
                             ) {
-                                Text(DateTimeFormatter.default.format(it.local))
+                                Text(DateTimeFormatter.local.format(it.local))
                             }
                         }
                     }

@@ -10,7 +10,7 @@ object KrontabPartsStylesheet : StyleSheet() {
     val containerItems = 8
     val container by style {
         display(DisplayStyle.Grid)
-        margin(0.px, auto.unsafeCast<CSSNumeric>())
+        margin(16.px, auto.unsafeCast<CSSNumeric>())
         width(containerSize)
         gridTemplateColumns(
             (0 until containerItems).joinToString(" ") { _ -> "1fr" }
