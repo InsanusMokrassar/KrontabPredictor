@@ -9,6 +9,7 @@ import dev.inmo.krontab.predictor.css.KrontabPartsStylesheet
 import dev.inmo.krontab.predictor.ui.main.MainViewModel
 import korlibs.time.format
 import kotlinx.browser.document
+import kotlinx.browser.window
 import kotlinx.dom.appendElement
 import org.jetbrains.compose.web.attributes.InputType
 import org.jetbrains.compose.web.css.Style
@@ -17,9 +18,24 @@ import org.jetbrains.compose.web.dom.Input
 import org.jetbrains.compose.web.dom.Label
 import org.jetbrains.compose.web.dom.Text
 import org.jetbrains.compose.web.renderComposable
+import org.w3c.dom.Location
+import org.w3c.dom.url.URLSearchParams
+
+private val urlSearchParams by lazy {
+    URLSearchParams(window.location.search)
+}
+var krontabInUrl: String?
+    get() = urlSearchParams.get("krontab")
+    set(value) {
+        value ?.also {
+            urlSearchParams.apply { set("krontab", it) }.toString()
+        } ?: urlSearchParams.apply { delete("krontab") }.toString()
+        val url = window.location.toString().replace(window.location.search, "?$urlSearchParams")
+        window.history.pushState(value, "Krontab $value", url)
+    }
 
 fun main() {
-    val viewModel = MainViewModel()
+    val viewModel = MainViewModel(krontabInUrl)
     renderComposable(document.body ?.appendElement("div", {}) ?: return) {
         Style(KrontabPartsStylesheet)
         Style(KrontabCommonStylesheet)
@@ -78,5 +94,7 @@ fun main() {
                 }
             }
         }
+
+        krontabInUrl = viewModel.krontabTemplateState.value
     }
 }

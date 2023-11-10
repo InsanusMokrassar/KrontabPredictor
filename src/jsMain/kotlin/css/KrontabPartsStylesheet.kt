@@ -1,27 +1,13 @@
 package dev.inmo.krontab.predictor.css
 
-import org.jetbrains.compose.web.css.CSSNumeric
-import org.jetbrains.compose.web.css.DisplayStyle
-import org.jetbrains.compose.web.css.GridAutoFlow
-import org.jetbrains.compose.web.css.StyleSheet
-import org.jetbrains.compose.web.css.display
-import org.jetbrains.compose.web.css.gap
-import org.jetbrains.compose.web.css.gridAutoFlow
-import org.jetbrains.compose.web.css.gridColumn
-import org.jetbrains.compose.web.css.gridTemplateColumns
+import org.jetbrains.compose.web.ExperimentalComposeWebApi
+import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.css.keywords.auto
-import org.jetbrains.compose.web.css.margin
-import org.jetbrains.compose.web.css.maxWidth
-import org.jetbrains.compose.web.css.minWidth
-import org.jetbrains.compose.web.css.percent
-import org.jetbrains.compose.web.css.px
-import org.jetbrains.compose.web.css.textAlign
-import org.jetbrains.compose.web.css.width
 
 object KrontabPartsStylesheet : StyleSheet() {
     val containerSize = 600.px
     val containerItemsGap = 16.px
-    val containerItems = 9
+    val containerItems = 8
     val container by style {
         display(DisplayStyle.Grid)
         margin(0.px, auto.unsafeCast<CSSNumeric>())
@@ -32,14 +18,24 @@ object KrontabPartsStylesheet : StyleSheet() {
         gap(containerItemsGap)
     }
 
+    @OptIn(ExperimentalComposeWebApi::class)
     val element by style {
         display(DisplayStyle.Grid)
         textAlign("center")
         gridTemplateColumns("1fr")
-        gridColumn("span 1")
+
+        transitions {
+            properties("transform") {
+                duration(0.3.s)
+                timingFunction(AnimationTimingFunction.EaseInOut)
+            }
+        }
     }
+    @OptIn(ExperimentalComposeWebApi::class)
     val elementFocused by style {
-        gridColumn("span 2")
+        transform {
+            scale(1.2, 1.2)
+        }
     }
 
     val input by style {

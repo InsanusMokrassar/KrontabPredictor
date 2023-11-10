@@ -1,6 +1,7 @@
 package dev.inmo.krontab.predictor.ui.main
 
 import androidx.compose.runtime.*
+import dev.inmo.krontab.KrontabTemplate
 import dev.inmo.krontab.toSchedule
 import dev.inmo.krontab.utils.asFlowWithoutDelays
 import dev.inmo.micro_utils.common.applyDiff
@@ -20,24 +21,26 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
 
-class MainViewModel {
+class MainViewModel(
+    initialStateOfKrontab: KrontabTemplate? = null
+) {
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
     val secondsState = MutableStateFlow("*")
-    val secondsUIState = secondsState.asComposeState(scope)
+    val secondsUIState by lazy { secondsState.asComposeState(scope) }
     val minutesState = MutableStateFlow("*")
-    val minutesUIState = minutesState.asComposeState(scope)
+    val minutesUIState by lazy { minutesState.asComposeState(scope) }
     val hoursState = MutableStateFlow("*")
-    val hoursUIState = hoursState.asComposeState(scope)
+    val hoursUIState by lazy { hoursState.asComposeState(scope) }
     val daysState = MutableStateFlow("*")
-    val daysUIState = daysState.asComposeState(scope)
+    val daysUIState by lazy { daysState.asComposeState(scope) }
     val monthsState = MutableStateFlow("*")
-    val monthsUIState = monthsState.asComposeState(scope)
+    val monthsUIState by lazy { monthsState.asComposeState(scope) }
     val yearsState = MutableStateFlow("")
-    val yearsUIState = monthsState.asComposeState(scope)
+    val yearsUIState by lazy { monthsState.asComposeState(scope) }
     val timezoneState = MutableStateFlow("")
-    val timezoneUIState = monthsState.asComposeState(scope)
+    val timezoneUIState by lazy { monthsState.asComposeState(scope) }
     val weekDaysState = MutableStateFlow("")
-    val weekDaysUIState = monthsState.asComposeState(scope)
+    val weekDaysUIState by lazy { monthsState.asComposeState(scope) }
     private fun String.krontabPart(suffix: String = "") = takeIf { it.isNotEmpty() } ?.let { " ${it}$suffix" } ?: ""
     private val krontabTemplateStateFlow = merge(
         secondsState,
@@ -56,10 +59,13 @@ class MainViewModel {
     val scheduleItemsState = MutableStateFlow(10)
     val scheduleUIItemsState = scheduleItemsState.asComposeState(scope)
 
+    val presets = listOf(
+        "Every second" to "* * * * *"
+    )
+
     private val _schedule = mutableStateListOf<DateTime>()
     val schedule: List<DateTime>
         get() = _schedule
-    private var job: Job? = null
     private val scheduleRecalculatorMapper = merge(
         krontabTemplateStateFlow
     ).map {
@@ -75,4 +81,35 @@ class MainViewModel {
         }
     }
     private val scheduleRecalculatorMapperJob = scheduleRecalculatorMapper.launchIn(scope)
+
+    fun onSetKrontabState(krontabTemplate: KrontabTemplate) {
+        val splitted = krontabTemplate.split(" ")
+
+        runCatching {
+            secondsState.value = splitted[0]
+            minutesState.value = splitted[1]
+            hoursState.value = splitted[2]
+            daysState.value = splitted[3]
+            monthsState.value = splitted[4]
+            splitted.drop(5).forEach {
+                when {
+                    it.endsWith("o") -> {
+                        timezoneState.value = it.drop(1)
+                    }
+                    it.endsWith("w") -> {
+                        weekDaysState.value = it.drop(1)
+                    }
+                    else -> {
+                        yearsState.value = it
+                    }
+                }
+            }
+        }
+    }
+
+    init {
+        initialStateOfKrontab ?.let {
+            onSetKrontabState(initialStateOfKrontab)
+        }
+    }
 }
