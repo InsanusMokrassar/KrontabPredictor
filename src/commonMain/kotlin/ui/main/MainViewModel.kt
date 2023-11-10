@@ -32,14 +32,24 @@ class MainViewModel {
     val daysUIState = daysState.asComposeState(scope)
     val monthsState = MutableStateFlow("*")
     val monthsUIState = monthsState.asComposeState(scope)
+    val yearsState = MutableStateFlow("")
+    val yearsUIState = monthsState.asComposeState(scope)
+    val timezoneState = MutableStateFlow("")
+    val timezoneUIState = monthsState.asComposeState(scope)
+    val weekDaysState = MutableStateFlow("")
+    val weekDaysUIState = monthsState.asComposeState(scope)
+    private fun String.krontabPart(suffix: String = "") = takeIf { it.isNotEmpty() } ?.let { " ${it}$suffix" } ?: ""
     private val krontabTemplateStateFlow = merge(
         secondsState,
         minutesState,
         hoursState,
         daysState,
-        monthsState
+        monthsState,
+        yearsState,
+        timezoneState,
+        weekDaysState
     ).map {
-        "${secondsState.value} ${minutesState.value} ${hoursState.value} ${daysState.value} ${monthsState.value}"
+        "${secondsState.value} ${minutesState.value} ${hoursState.value} ${daysState.value} ${monthsState.value}${yearsState.value.krontabPart()}${timezoneState.value.krontabPart("o")}${weekDaysState.value.krontabPart("w")}"
     }.stateIn(scope, SharingStarted.Eagerly, "* * * * *")
     val krontabTemplateState = krontabTemplateStateFlow.asComposeState(scope)
 

@@ -1,0 +1,26 @@
+on:
+  push:
+    branches:
+      - master
+
+name: Publish Web
+
+jobs:
+  build-ubuntu:
+    name: Publish Web
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Build
+        run: ./gradlew jsBrowserDistribution
+      - name: Publish
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/dist/js/productionExecutable
+          publish_branch: site
