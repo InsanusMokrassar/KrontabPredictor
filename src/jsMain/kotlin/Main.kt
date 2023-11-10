@@ -25,37 +25,46 @@ fun main() {
         Style(KrontabCommonStylesheet)
         Style(KrontabDateTimeGridsStylesheet)
         Div({ classes(KrontabPartsStylesheet.container) }) {
-            Div { Text("Seconds") }
-            Div { Text("Minutes") }
-            Div { Text("Hours") }
-            Div { Text("Days") }
-            Div { Text("Months") }
-            Div { Text("Years") }
-            Div { Text("Timezone") }
-            Div { Text("Week\u00a0day") }
-        }
-        Div({ classes(KrontabPartsStylesheet.container) }) {
             @Composable
-            fun DrawState(state: String, onChange: (String) -> Unit) {
+            fun DrawState(title: String, state: String, onChange: (String) -> Unit) {
                 val mutableState = remember { mutableStateOf(state) }
-                Input(
-                    InputType.Text,
-                ) {
-                    value(mutableState.value)
-                    onInput {
-                        mutableState.value = it.value.trim()
-                        onChange(mutableState.value)
+                val focused = remember { mutableStateOf(false) }
+                Div({
+                    classes(KrontabPartsStylesheet.element)
+                    if (focused.value) {
+                        classes(KrontabPartsStylesheet.elementFocused)
+                    }
+                }) {
+                    Div({ classes(KrontabPartsStylesheet.labelContainer) }) {
+                        Label { Text(title) }
+                    }
+                    Input(
+                        InputType.Text,
+                    ) {
+                        classes(KrontabPartsStylesheet.input)
+                        value(mutableState.value)
+                        onInput {
+                            mutableState.value = it.value.trim()
+                            onChange(mutableState.value)
+                        }
+                        onFocusIn {
+                            focused.value = true
+                        }
+                        onFocusOut {
+                            focused.value = false
+                        }
                     }
                 }
+
             }
-            DrawState(state = viewModel.secondsUIState.value, onChange = { viewModel.secondsState.value = it })
-            DrawState(state = viewModel.minutesUIState.value, onChange = { viewModel.minutesState.value = it })
-            DrawState(state = viewModel.hoursUIState.value, onChange = { viewModel.hoursState.value = it })
-            DrawState(state = viewModel.daysUIState.value, onChange = { viewModel.daysState.value = it })
-            DrawState(state = viewModel.monthsUIState.value, onChange = { viewModel.monthsState.value = it })
-            DrawState(state = viewModel.yearsUIState.value, onChange = { viewModel.yearsState.value = it })
-            DrawState(state = viewModel.timezoneUIState.value, onChange = { viewModel.timezoneState.value = it })
-            DrawState(state = viewModel.weekDaysUIState.value, onChange = { viewModel.weekDaysState.value = it })
+            DrawState("Seconds", state = viewModel.secondsUIState.value, onChange = { viewModel.secondsState.value = it })
+            DrawState("Minutes", state = viewModel.minutesUIState.value, onChange = { viewModel.minutesState.value = it })
+            DrawState("Hours", state = viewModel.hoursUIState.value, onChange = { viewModel.hoursState.value = it })
+            DrawState("Days", state = viewModel.daysUIState.value, onChange = { viewModel.daysState.value = it })
+            DrawState("Months", state = viewModel.monthsUIState.value, onChange = { viewModel.monthsState.value = it })
+            DrawState("Years", state = viewModel.yearsUIState.value, onChange = { viewModel.yearsState.value = it })
+            DrawState("Timezone", state = viewModel.timezoneUIState.value, onChange = { viewModel.timezoneState.value = it })
+            DrawState("Week\u00a0Day", state = viewModel.weekDaysUIState.value, onChange = { viewModel.weekDaysState.value = it })
         }
         Div({ classes(KrontabCommonStylesheet.container) }) {
             Input(InputType.Text) {
