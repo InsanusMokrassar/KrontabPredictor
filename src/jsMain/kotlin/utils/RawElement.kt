@@ -7,17 +7,19 @@ import org.jetbrains.compose.web.dom.ElementScope
 import org.jetbrains.compose.web.dom.TagElement
 import org.w3c.dom.HTMLElement
 
-private val buildersCache = mutableMapOf<String, ElementBuilder<HTMLElement>>()
+private val buildersCache = mutableMapOf<String, ElementBuilder<out HTMLElement>>()
+
+abstract external class MaterialElement : HTMLElement
 
 @Composable
-fun RawElement(
+fun MaterialElement(
     tag: String,
-    attrs: (AttrsScope<HTMLElement>.() -> Unit)? = null,
-    content: (@Composable ElementScope<HTMLElement>.() -> Unit)? = null
+    attrs: (AttrsScope<MaterialElement>.() -> Unit)? = null,
+    content: (@Composable ElementScope<MaterialElement>.() -> Unit)? = null
 ) = TagElement(
     buildersCache.getOrPut(tag) {
         ElementBuilder.createBuilder(tag)
-    },
+    } as ElementBuilder<MaterialElement>,
     attrs,
     content
 )

@@ -91,7 +91,7 @@ kotlin {
         jsMain {
             dependencies {
                 implementation(compose.web.core)
-                api npm('@material/web', '1.0.1')
+//                api npm('@material/web', '1.0.1')
 //                api libs.jb.compose.material3.js
             }
         }

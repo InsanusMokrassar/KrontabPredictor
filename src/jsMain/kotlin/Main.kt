@@ -8,16 +8,18 @@ import dev.inmo.krontab.predictor.css.KrontabDateTimeGridsStylesheet
 import dev.inmo.krontab.predictor.css.KrontabPartsStylesheet
 import dev.inmo.krontab.predictor.css.StandardBlockStylesheet
 import dev.inmo.krontab.predictor.ui.main.MainViewModel
-import dev.inmo.krontab.predictor.utils.RawElement
+import dev.inmo.krontab.predictor.utils.MaterialElement
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.dom.appendElement
+import org.jetbrains.compose.web.attributes.InputType
+import org.jetbrains.compose.web.attributes.readOnly
 import org.jetbrains.compose.web.css.Style
 import org.jetbrains.compose.web.dom.Div
+import org.jetbrains.compose.web.dom.Input
 import org.jetbrains.compose.web.dom.Label
 import org.jetbrains.compose.web.dom.Text
 import org.jetbrains.compose.web.renderComposable
-import org.w3c.dom.HTMLElement
 import org.w3c.dom.url.URLSearchParams
 
 private val urlSearchParams by lazy {
@@ -26,15 +28,17 @@ private val urlSearchParams by lazy {
 var krontabInUrl: String?
     get() = urlSearchParams.get("krontab")
     set(value) {
+        while (urlSearchParams.has("krontab")) {
+            urlSearchParams.delete("krontab")
+        }
         value ?.also {
-            urlSearchParams.apply { set("krontab", it) }.toString()
-        } ?: urlSearchParams.apply { delete("krontab") }.toString()
+            urlSearchParams.set("krontab", it)
+        }
         val url = window.location.toString().replace(window.location.search, "?$urlSearchParams")
         window.history.pushState(value, "Krontab $value", url)
     }
 
 fun main() {
-    MdOutlinedTextField() // just to activate material web components
     val viewModel = MainViewModel(krontabInUrl)
     renderComposable(document.body ?.appendElement("div", {}) ?: return) {
         Style(KrontabPartsStylesheet)
@@ -56,23 +60,22 @@ fun main() {
                         Div({ classes(KrontabPartsStylesheet.labelContainer) }) {
                             Label { Text(title) }
                         }
-                        RawElement(
-                            "md-outlined-text-field",
-                            {
-                                classes(KrontabPartsStylesheet.input)
-                                attr("value", mutableState.value)
-                                addEventListener("input") {
-                                    mutableState.value = (it.target as HTMLElement).getAttribute("value") ?.trim() ?: return@addEventListener
-                                    onChange(mutableState.value)
-                                }
-                                onFocusIn {
-                                    focused.value = true
-                                }
-                                onFocusOut {
-                                    focused.value = false
-                                }
+                        Input(
+                            InputType.Text
+                        ) {
+                            classes(KrontabPartsStylesheet.input)
+                            value(mutableState.value)
+                            onInput {
+                                mutableState.value = it.target.value.trim()
+                                onChange(mutableState.value)
                             }
-                        )
+                            onFocusIn {
+                                focused.value = true
+                            }
+                            onFocusOut {
+                                focused.value = false
+                            }
+                        }
                     }
                 }
                 DrawState("Seconds", state = viewModel.secondsUIState.value, onChange = { viewModel.secondsState.value = it })
@@ -87,17 +90,16 @@ fun main() {
         }
         DefaultBlock("Krontab string") {
             Div({ classes(KrontabCommonStylesheet.container) }) {
-                RawElement(
-                "md-outlined-text-field",
-                    {
-                        attr("value", viewModel.krontabTemplateState.value)
-                        attr("readOnly", "true")
-                    }
-                )
+                Input(
+                    InputType.Text
+                ) {
+                    value(viewModel.krontabTemplateState.value)
+                    readOnly()
+                }
             }
         }
         DefaultBlock("Instructions") {
-            RawElement("md-text-button")
+            MaterialElement("md-text-button")
         }
         DefaultBlock("Output date/times") {
             Div({ classes(KrontabDateTimeGridsStylesheet.container) }) {
