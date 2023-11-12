@@ -94,6 +94,7 @@ fun main() {
                     InputType.Text
                 ) {
                     value(viewModel.krontabTemplateState.value)
+                    classes(KrontabCommonStylesheet.input)
                     readOnly()
                 }
             }
@@ -104,7 +105,7 @@ fun main() {
         DefaultBlock("Output date/times") {
             Div({ classes(KrontabDateTimeGridsStylesheet.container) }) {
                 viewModel.schedule.forEach {
-                    Label {
+                    Label(attrs = { classes(KrontabDateTimeGridsStylesheet.dateTime) }) {
                         Text(DateTimeFormatter.local.format(it.local))
                     }
                 }

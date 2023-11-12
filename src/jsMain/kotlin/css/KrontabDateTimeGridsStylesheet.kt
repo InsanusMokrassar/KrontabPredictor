@@ -1,16 +1,7 @@
 package dev.inmo.krontab.predictor.css
 
-import org.jetbrains.compose.web.css.CSSNumeric
-import org.jetbrains.compose.web.css.DisplayStyle
-import org.jetbrains.compose.web.css.StyleSheet
-import org.jetbrains.compose.web.css.display
-import org.jetbrains.compose.web.css.gridTemplateColumns
+import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.css.keywords.auto
-import org.jetbrains.compose.web.css.margin
-import org.jetbrains.compose.web.css.minWidth
-import org.jetbrains.compose.web.css.px
-import org.jetbrains.compose.web.css.textAlign
-import org.jetbrains.compose.web.css.width
 
 object KrontabDateTimeGridsStylesheet : StyleSheet() {
     val container by style {
@@ -23,5 +14,9 @@ object KrontabDateTimeGridsStylesheet : StyleSheet() {
             textAlign("center")
             minWidth(0.px)
         }
+    }
+    val dateTime by style {
+        minHeight(36.px)
+        fontSize(1.5.em)
     }
 }
