@@ -13,6 +13,8 @@ import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.dom.appendElement
 import org.jetbrains.compose.web.attributes.InputType
+import org.jetbrains.compose.web.attributes.max
+import org.jetbrains.compose.web.attributes.min
 import org.jetbrains.compose.web.attributes.readOnly
 import org.jetbrains.compose.web.css.Style
 import org.jetbrains.compose.web.dom.Div
@@ -48,7 +50,7 @@ fun main() {
         DefaultBlock("Krontab parts") {
             Div({ classes(KrontabPartsStylesheet.container) }) {
                 @Composable
-                fun DrawState(title: String, state: String, onChange: (String) -> Unit) {
+                fun DrawInput(title: String, state: String, numberTypeRange: IntRange? = null, onChange: (String) -> Unit) {
                     val mutableState = remember { mutableStateOf(state) }
                     val focused = remember { mutableStateOf(false) }
                     Div({
@@ -61,8 +63,14 @@ fun main() {
                             Label { Text(title) }
                         }
                         Input(
-                            InputType.Text
+                            numberTypeRange ?.let {
+                                InputType.Number
+                            } ?: InputType.Text
                         ) {
+                            numberTypeRange ?.let {
+                                min(it.first.toString())
+                                max(it.toString())
+                            }
                             classes(KrontabPartsStylesheet.input)
                             value(mutableState.value)
                             onInput {
@@ -78,14 +86,14 @@ fun main() {
                         }
                     }
                 }
-                DrawState("Seconds", state = viewModel.secondsUIState.value, onChange = { viewModel.secondsState.value = it })
-                DrawState("Minutes", state = viewModel.minutesUIState.value, onChange = { viewModel.minutesState.value = it })
-                DrawState("Hours", state = viewModel.hoursUIState.value, onChange = { viewModel.hoursState.value = it })
-                DrawState("Days", state = viewModel.daysUIState.value, onChange = { viewModel.daysState.value = it })
-                DrawState("Months", state = viewModel.monthsUIState.value, onChange = { viewModel.monthsState.value = it })
-                DrawState("Years", state = viewModel.yearsUIState.value, onChange = { viewModel.yearsState.value = it })
-                DrawState("Timezone", state = viewModel.timezoneUIState.value, onChange = { viewModel.timezoneState.value = it })
-                DrawState("Week\u00a0Day", state = viewModel.weekDaysUIState.value, onChange = { viewModel.weekDaysState.value = it })
+                DrawInput("Seconds", state = viewModel.secondsUIState.value, onChange = { viewModel.secondsState.value = it })
+                DrawInput("Minutes", state = viewModel.minutesUIState.value, onChange = { viewModel.minutesState.value = it })
+                DrawInput("Hours", state = viewModel.hoursUIState.value, onChange = { viewModel.hoursState.value = it })
+                DrawInput("Days", state = viewModel.daysUIState.value, onChange = { viewModel.daysState.value = it })
+                DrawInput("Months", state = viewModel.monthsUIState.value, onChange = { viewModel.monthsState.value = it })
+                DrawInput("Years", state = viewModel.yearsUIState.value, onChange = { viewModel.yearsState.value = it })
+                DrawInput("Timezone", state = viewModel.timezoneUIState.value, numberTypeRange = 0 until (60 * 24), onChange = { viewModel.timezoneState.value = it })
+                DrawInput("Week\u00a0Day", state = viewModel.weekDaysUIState.value, onChange = { viewModel.weekDaysState.value = it })
             }
         }
         DefaultBlock("Krontab string") {
@@ -94,6 +102,7 @@ fun main() {
                     InputType.Text
                 ) {
                     value(viewModel.krontabTemplateState.value)
+                    classes(KrontabCommonStylesheet.input)
                     readOnly()
                 }
             }

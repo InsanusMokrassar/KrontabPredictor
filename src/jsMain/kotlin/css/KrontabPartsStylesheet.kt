@@ -41,6 +41,8 @@ object KrontabPartsStylesheet : StyleSheet() {
     val input by style {
         minWidth(0.px)
         textAlign("center")
+        height(32.px)
+        fontSize(1.5.em)
     }
 
     val labelContainer by style {

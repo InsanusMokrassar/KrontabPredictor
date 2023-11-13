@@ -1,15 +1,7 @@
 package dev.inmo.krontab.predictor.css
 
-import org.jetbrains.compose.web.css.CSSNumeric
-import org.jetbrains.compose.web.css.DisplayStyle
-import org.jetbrains.compose.web.css.StyleSheet
-import org.jetbrains.compose.web.css.display
-import org.jetbrains.compose.web.css.gridTemplateColumns
+import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.css.keywords.auto
-import org.jetbrains.compose.web.css.margin
-import org.jetbrains.compose.web.css.px
-import org.jetbrains.compose.web.css.textAlign
-import org.jetbrains.compose.web.css.width
 
 object KrontabCommonStylesheet : StyleSheet() {
     val container by style {
@@ -21,5 +13,9 @@ object KrontabCommonStylesheet : StyleSheet() {
         child(self, selector("*")) style {
             textAlign("center")
         }
+    }
+    val input by style {
+        minHeight(36.px)
+        fontSize(1.5.em)
     }
 }
