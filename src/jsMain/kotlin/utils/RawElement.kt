@@ -12,7 +12,7 @@ private val buildersCache = mutableMapOf<String, ElementBuilder<out HTMLElement>
 abstract external class MaterialElement : HTMLElement
 
 @Composable
-fun MaterialElement(
+fun RawElement(
     tag: String,
     attrs: (AttrsScope<MaterialElement>.() -> Unit)? = null,
     content: (@Composable ElementScope<MaterialElement>.() -> Unit)? = null

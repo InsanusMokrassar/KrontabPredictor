@@ -3,12 +3,8 @@ package dev.inmo.krontab.predictor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import dev.inmo.krontab.predictor.css.KrontabCommonStylesheet
-import dev.inmo.krontab.predictor.css.KrontabDateTimeGridsStylesheet
-import dev.inmo.krontab.predictor.css.KrontabPartsStylesheet
-import dev.inmo.krontab.predictor.css.StandardBlockStylesheet
+import dev.inmo.krontab.predictor.css.*
 import dev.inmo.krontab.predictor.ui.main.MainViewModel
-import dev.inmo.krontab.predictor.utils.MaterialElement
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.dom.appendElement
@@ -47,6 +43,7 @@ fun main() {
         Style(KrontabCommonStylesheet)
         Style(KrontabDateTimeGridsStylesheet)
         Style(StandardBlockStylesheet)
+        Style(KrontabInstructionsStylesheet)
         DefaultBlock("Krontab parts") {
             Div({ classes(KrontabPartsStylesheet.container) }) {
                 @Composable
@@ -108,7 +105,15 @@ fun main() {
             }
         }
         DefaultBlock("Instructions") {
-            MaterialElement("md-text-button")
+            Div({ classes(KrontabInstructionsStylesheet.container) }) {
+                viewModel.modifierDescriptions.forEach {
+                    Div({ classes(KrontabInstructionsStylesheet.containerItem) }) {
+                        Label { Text(it.modifier) }
+                        Label { Text(it.description) }
+                        Label { Text(it.sample.joinToString(" ")) }
+                    }
+                }
+            }
         }
         DefaultBlock("Output date/times") {
             Div({ classes(KrontabDateTimeGridsStylesheet.container) }) {

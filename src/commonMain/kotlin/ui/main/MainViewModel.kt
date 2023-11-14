@@ -1,6 +1,6 @@
 package dev.inmo.krontab.predictor.ui.main
 
-import androidx.compose.runtime.*
+import androidx.compose.runtime.mutableStateListOf
 import dev.inmo.krontab.KrontabTemplate
 import dev.inmo.krontab.toSchedule
 import dev.inmo.krontab.utils.asFlowWithoutDelays
@@ -10,20 +10,17 @@ import dev.inmo.micro_utils.coroutines.doInUI
 import korlibs.time.DateTime
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.merge
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.flow.*
 
 class MainViewModel(
     initialStateOfKrontab: KrontabTemplate? = null
 ) {
+    data class ModifierInstruction(
+        val modifier: String,
+        val description: String,
+        val sample: List<String>
+    )
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
     val secondsState = MutableStateFlow("*")
     val secondsUIState by lazy { secondsState.asComposeState(scope) }
@@ -81,6 +78,35 @@ class MainViewModel(
         }
     }
     private val scheduleRecalculatorMapperJob = scheduleRecalculatorMapper.launchIn(scope)
+    val modifierDescriptions = mutableStateListOf<ModifierInstruction>().apply {
+        add(
+            ModifierInstruction(
+                modifier = ",",
+                description = "Use to separate different time selectors",
+                sample = listOf("10,20")
+            )
+        )
+        add(
+            ModifierInstruction(
+                modifier = "/",
+                description = "Use to set repeatable rule. Left side is the time when rule starts to work, right one is the divider of when time is working",
+                sample = listOf(
+                    "0/20",
+                    "*/20",
+                    "/20",
+                )
+            )
+        )
+        add(
+            ModifierInstruction(
+                modifier = "-",
+                description = "Use to set the range of data. Sample will be equal to 5,6,7,8,9,10",
+                sample = listOf(
+                    "5-10",
+                )
+            )
+        )
+    }
 
     fun onSetKrontabState(krontabTemplate: KrontabTemplate) {
         val splitted = ArrayDeque(krontabTemplate.split(" "))
