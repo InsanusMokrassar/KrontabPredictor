@@ -3,7 +3,11 @@ package dev.inmo.krontab.predictor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import dev.inmo.krontab.predictor.css.*
+import dev.inmo.krontab.predictor.css.KrontabCommonStylesheet
+import dev.inmo.krontab.predictor.css.KrontabDateTimeGridsStylesheet
+import dev.inmo.krontab.predictor.css.KrontabInstructionsStylesheet
+import dev.inmo.krontab.predictor.css.KrontabPartsStylesheet
+import dev.inmo.krontab.predictor.css.StandardBlockStylesheet
 import dev.inmo.krontab.predictor.ui.main.MainViewModel
 import kotlinx.browser.document
 import kotlinx.browser.window
@@ -118,7 +122,7 @@ fun main() {
         DefaultBlock("Output date/times") {
             Div({ classes(KrontabDateTimeGridsStylesheet.container) }) {
                 viewModel.schedule.forEach {
-                    Label {
+                    Label(attrs = { classes(KrontabDateTimeGridsStylesheet.dateTime) }) {
                         Text(DateTimeFormatter.local.format(it.local))
                     }
                 }
