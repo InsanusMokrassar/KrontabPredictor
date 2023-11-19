@@ -18,6 +18,9 @@ object KrontabInstructionsStylesheet : StyleSheet() {
         lastChild style {
             borderWidth(left = 0.px, top = 0.px, right = 0.px, bottom = 0.px)
         }
+
+        color(KrontabCommonStylesheet.darkThemeTextColor)
+        backgroundColor(KrontabCommonStylesheet.darkThemeBackgroundColor)
     }
 
     val containerItem by style {

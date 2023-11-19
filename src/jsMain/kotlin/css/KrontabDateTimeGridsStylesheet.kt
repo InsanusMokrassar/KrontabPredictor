@@ -8,12 +8,15 @@ object KrontabDateTimeGridsStylesheet : StyleSheet() {
         display(DisplayStyle.Grid)
         margin(16.px, auto.unsafeCast<CSSNumeric>())
         gridTemplateColumns("1fr 1fr")
-        width(KrontabPartsStylesheet.containerWidth)
+        width(KrontabCommonStylesheet.containerWidth)
 
         child(self, selector("*")) style {
             textAlign("center")
             minWidth(0.px)
         }
+
+        color(KrontabCommonStylesheet.darkThemeTextColor)
+        backgroundColor(KrontabCommonStylesheet.darkThemeBackgroundColor)
     }
     val dateTime by style {
         minHeight(36.px)

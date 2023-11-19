@@ -5,13 +5,12 @@ import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.css.keywords.auto
 
 object KrontabPartsStylesheet : StyleSheet() {
-    val containerWidth = 600.px
     val containerItemsGap = 16.px
     val containerItems = 8
     val container by style {
         display(DisplayStyle.Grid)
         margin(16.px, auto.unsafeCast<CSSNumeric>())
-        width(containerWidth)
+        width(KrontabCommonStylesheet.containerWidth)
         gridTemplateColumns(
             (0 until containerItems).joinToString(" ") { _ -> "1fr" }
         )
@@ -43,6 +42,9 @@ object KrontabPartsStylesheet : StyleSheet() {
         textAlign("center")
         height(32.px)
         fontSize(1.5.em)
+
+        color(KrontabCommonStylesheet.darkThemeTextColor)
+        backgroundColor(KrontabCommonStylesheet.darkThemeBackgroundColor)
     }
 
     val labelContainer by style {

@@ -1,0 +1,8 @@
+.root {
+    background-image: url("../img/background.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    backdrop-filter: blur(1px);
+    color: white;
+}
