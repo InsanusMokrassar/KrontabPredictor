@@ -3,11 +3,7 @@ package dev.inmo.krontab.predictor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import dev.inmo.krontab.predictor.css.KrontabCommonStylesheet
-import dev.inmo.krontab.predictor.css.KrontabDateTimeGridsStylesheet
-import dev.inmo.krontab.predictor.css.KrontabInstructionsStylesheet
-import dev.inmo.krontab.predictor.css.KrontabPartsStylesheet
-import dev.inmo.krontab.predictor.css.StandardBlockStylesheet
+import dev.inmo.krontab.predictor.css.*
 import dev.inmo.krontab.predictor.ui.main.MainViewModel
 import kotlinx.browser.document
 import kotlinx.browser.window
@@ -17,30 +13,29 @@ import org.jetbrains.compose.web.attributes.max
 import org.jetbrains.compose.web.attributes.min
 import org.jetbrains.compose.web.attributes.readOnly
 import org.jetbrains.compose.web.css.Style
-import org.jetbrains.compose.web.dom.Div
-import org.jetbrains.compose.web.dom.Input
-import org.jetbrains.compose.web.dom.Label
-import org.jetbrains.compose.web.dom.Text
+import org.jetbrains.compose.web.dom.*
 import org.jetbrains.compose.web.renderComposable
 import org.w3c.dom.url.URLSearchParams
 
 private val urlSearchParams by lazy {
     URLSearchParams(window.location.search)
 }
+private external fun encodeURIComponent(value: String): String
 var krontabInUrl: String?
     get() = urlSearchParams.get("krontab")
     set(value) {
-        while (urlSearchParams.has("krontab")) {
-            urlSearchParams.delete("krontab")
-        }
-        
-        if (value == "* * * * *" || value == null) {
-            urlSearchParams.delete("krontab")
-        } else {
-            urlSearchParams.set("krontab", value)
-        }
-        
-        val url = window.location.toString().replace(window.location.search, "?$urlSearchParams")
+        val newSearchParams = "?krontab=${encodeURIComponent(value ?: "* * * * *")}"
+
+        val url = when {
+            window.location.search.isNotEmpty() -> {
+                window.location.href.substring(0, window.location.href.indexOf('?'))
+            }
+            window.location.hash.isNotEmpty() -> {
+                window.location.href.substring(0, window.location.href.indexOf('#'))
+            }
+            else -> window.location.href
+        } + newSearchParams
+
         window.history.pushState(value, "Krontab $value", url)
     }
 
@@ -114,6 +109,11 @@ fun main() {
         }
         DefaultBlock("Instructions") {
             Div({ classes(KrontabInstructionsStylesheet.container) }) {
+                Div({ classes(KrontabInstructionsStylesheet.containerItem) }) {
+                    B { Text("Modifier") }
+                    B { Text("Description") }
+                    B { Text("Sample") }
+                }
                 viewModel.modifierDescriptions.forEach {
                     Div({ classes(KrontabInstructionsStylesheet.containerItem) }) {
                         Label { Text(it.modifier) }

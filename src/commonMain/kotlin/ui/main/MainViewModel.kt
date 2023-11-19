@@ -106,6 +106,24 @@ class MainViewModel(
                 )
             )
         )
+        add(
+            ModifierInstruction(
+                modifier = "F",
+                description = "Used as the first value in section. For example, for seconds it is 0",
+                sample = listOf(
+                    "F",
+                )
+            )
+        )
+        add(
+            ModifierInstruction(
+                modifier = "L",
+                description = "Used as the last value in section. For example, for month it will set section value to 31 which means \"latest day\"",
+                sample = listOf(
+                    "L",
+                )
+            )
+        )
     }
 
     fun onSetKrontabState(krontabTemplate: KrontabTemplate) {

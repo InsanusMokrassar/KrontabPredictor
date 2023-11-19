@@ -7,6 +7,7 @@ object KrontabInstructionsStylesheet : StyleSheet() {
     val container by style {
         width(100.percent)
         margin(16.px, auto.unsafeCast<CSSNumeric>())
+        alignItems(AlignItems.Stretch)
         child(self, selector("*")) style {
             border {
                 this.color = Color.darkgray
