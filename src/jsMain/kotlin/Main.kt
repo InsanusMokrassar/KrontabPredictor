@@ -37,7 +37,7 @@ var krontabInUrl: String?
         if (value == "* * * * *" || value == null) {
             urlSearchParams.delete("krontab")
         } else {
-            urlSearchParams.set("krontab", it)
+            urlSearchParams.set("krontab", value)
         }
         
         val url = window.location.toString().replace(window.location.search, "?$urlSearchParams")
