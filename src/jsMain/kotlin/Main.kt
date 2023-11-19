@@ -30,6 +30,8 @@ private val urlSearchParams by lazy {
 var krontabInUrl: String?
     get() = urlSearchParams.get("krontab")
     set(value) {
+        if (value == "* * * * *") return
+        
         while (urlSearchParams.has("krontab")) {
             urlSearchParams.delete("krontab")
         }
