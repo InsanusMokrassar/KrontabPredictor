@@ -86,7 +86,7 @@ fun main() {
                         }
                     }
                 }
-                DrawInput("Seconds", state = viewModel.secondsUIState.value, onChange = { viewModel.secondsState.value = it })
+                DrawInput("Seconds", state = viewModel.secondsState.value, onChange = { viewModel.secondsState.value = it })
                 DrawInput("Minutes", state = viewModel.minutesUIState.value, onChange = { viewModel.minutesState.value = it })
                 DrawInput("Hours", state = viewModel.hoursUIState.value, onChange = { viewModel.hoursState.value = it })
                 DrawInput("Days", state = viewModel.daysUIState.value, onChange = { viewModel.daysState.value = it })

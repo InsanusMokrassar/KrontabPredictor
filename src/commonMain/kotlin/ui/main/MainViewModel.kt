@@ -1,11 +1,13 @@
 package dev.inmo.krontab.predictor.ui.main
 
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import dev.inmo.krontab.KrontabTemplate
 import dev.inmo.krontab.toSchedule
 import dev.inmo.krontab.utils.asFlowWithoutDelays
 import dev.inmo.micro_utils.common.applyDiff
 import dev.inmo.micro_utils.coroutines.compose.asComposeState
+import dev.inmo.micro_utils.coroutines.compose.asFlowState
 import dev.inmo.micro_utils.coroutines.doInUI
 import korlibs.time.DateTime
 import kotlinx.coroutines.CoroutineScope
@@ -14,7 +16,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.*
 
 class MainViewModel(
-    initialStateOfKrontab: KrontabTemplate? = null
+    initialStateOfKrontab: KrontabTemplate? = "15 * * * *"
 ) {
     data class ModifierInstruction(
         val modifier: String,
@@ -22,8 +24,7 @@ class MainViewModel(
         val sample: List<String>
     )
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
-    val secondsState = MutableStateFlow("*")
-    val secondsUIState by lazy { secondsState.asComposeState(scope) }
+    val secondsState = mutableStateOf("*").asFlowState(scope)
     val minutesState = MutableStateFlow("*")
     val minutesUIState by lazy { minutesState.asComposeState(scope) }
     val hoursState = MutableStateFlow("*")
@@ -40,7 +41,7 @@ class MainViewModel(
     val weekDaysUIState by lazy { weekDaysState.asComposeState(scope) }
     private fun String.krontabPart(suffix: String = "") = takeIf { it.isNotEmpty() } ?.let { " ${it}$suffix" } ?: ""
     private val krontabTemplateStateFlow = merge(
-        secondsState,
+        this.secondsState,
         minutesState,
         hoursState,
         daysState,
@@ -49,7 +50,7 @@ class MainViewModel(
         timezoneState,
         weekDaysState
     ).map {
-        "${secondsState.value} ${minutesState.value} ${hoursState.value} ${daysState.value} ${monthsState.value}${yearsState.value.krontabPart()}${timezoneState.value.krontabPart("o")}${weekDaysState.value.krontabPart("w")}"
+        "${this.secondsState.value} ${minutesState.value} ${hoursState.value} ${daysState.value} ${monthsState.value}${yearsState.value.krontabPart()}${timezoneState.value.krontabPart("o")}${weekDaysState.value.krontabPart("w")}"
     }.stateIn(scope, SharingStarted.Eagerly, "* * * * *")
     val krontabTemplateState = krontabTemplateStateFlow.asComposeState(scope)
 

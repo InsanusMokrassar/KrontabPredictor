@@ -1,10 +1,13 @@
 package dev.inmo.krontab.predictor
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.VerticalScrollbar
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
@@ -67,7 +70,7 @@ fun main(args: Array<String>) = application {
                                     )
                                 )
                             }
-                            DrawState(state = viewModel.secondsUIState.value, onChange = { viewModel.secondsState.value = it })
+                            DrawState(state = viewModel.secondsState.value, onChange = { viewModel.secondsState.value = it })
                             DrawState(state = viewModel.minutesUIState.value, onChange = { viewModel.minutesState.value = it })
                             DrawState(state = viewModel.hoursUIState.value, onChange = { viewModel.hoursState.value = it })
                             DrawState(state = viewModel.daysUIState.value, onChange = { viewModel.daysState.value = it })
