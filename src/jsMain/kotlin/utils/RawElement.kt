@@ -11,6 +11,7 @@ private val buildersCache = mutableMapOf<String, ElementBuilder<out HTMLElement>
 
 abstract external class MaterialElement : HTMLElement
 
+@Suppress("UNCHECKED_CAST")
 @Composable
 fun RawElement(
     tag: String,

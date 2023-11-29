@@ -71,10 +71,10 @@ fun main(args: Array<String>) = application {
                                 )
                             }
                             DrawState(state = viewModel.secondsState.value, onChange = { viewModel.secondsState.value = it })
-                            DrawState(state = viewModel.minutesUIState.value, onChange = { viewModel.minutesState.value = it })
-                            DrawState(state = viewModel.hoursUIState.value, onChange = { viewModel.hoursState.value = it })
-                            DrawState(state = viewModel.daysUIState.value, onChange = { viewModel.daysState.value = it })
-                            DrawState(state = viewModel.monthsUIState.value, onChange = { viewModel.monthsState.value = it })
+                            DrawState(state = viewModel.minutesState.value, onChange = { viewModel.minutesState.value = it })
+                            DrawState(state = viewModel.hoursState.value, onChange = { viewModel.hoursState.value = it })
+                            DrawState(state = viewModel.daysState.value, onChange = { viewModel.daysState.value = it })
+                            DrawState(state = viewModel.monthsState.value, onChange = { viewModel.monthsState.value = it })
                         }
                         TextField(
                             viewModel.krontabTemplateState.value,

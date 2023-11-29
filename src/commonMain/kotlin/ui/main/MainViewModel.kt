@@ -1,13 +1,12 @@
 package dev.inmo.krontab.predictor.ui.main
 
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import dev.inmo.krontab.KrontabTemplate
 import dev.inmo.krontab.toSchedule
 import dev.inmo.krontab.utils.asFlowWithoutDelays
 import dev.inmo.micro_utils.common.applyDiff
 import dev.inmo.micro_utils.coroutines.compose.asComposeState
-import dev.inmo.micro_utils.coroutines.compose.asFlowState
+import dev.inmo.micro_utils.coroutines.compose.FlowState
 import dev.inmo.micro_utils.coroutines.doInUI
 import korlibs.time.DateTime
 import kotlinx.coroutines.CoroutineScope
@@ -24,41 +23,37 @@ class MainViewModel(
         val sample: List<String>
     )
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
-    val secondsState = mutableStateOf("*").asFlowState(scope)
-    val minutesState = MutableStateFlow("*")
-    val minutesUIState by lazy { minutesState.asComposeState(scope) }
-    val hoursState = MutableStateFlow("*")
-    val hoursUIState by lazy { hoursState.asComposeState(scope) }
-    val daysState = MutableStateFlow("*")
-    val daysUIState by lazy { daysState.asComposeState(scope) }
-    val monthsState = MutableStateFlow("*")
-    val monthsUIState by lazy { monthsState.asComposeState(scope) }
-    val yearsState = MutableStateFlow("")
-    val yearsUIState by lazy { yearsState.asComposeState(scope) }
-    val timezoneState = MutableStateFlow("")
-    val timezoneUIState by lazy { timezoneState.asComposeState(scope) }
-    val weekDaysState = MutableStateFlow("")
-    val weekDaysUIState by lazy { weekDaysState.asComposeState(scope) }
+    val secondsState = FlowState("*")
+    val minutesState = FlowState("*")
+    val hoursState = FlowState("*")
+    val daysState = FlowState("*")
+    val monthsState = FlowState("*")
+    val yearsState = FlowState("")
+    val timezoneState = FlowState("")
+    val weekDaysState = FlowState("")
     private fun String.krontabPart(suffix: String = "") = takeIf { it.isNotEmpty() } ?.let { " ${it}$suffix" } ?: ""
     private val krontabTemplateStateFlow = merge(
         this.secondsState,
-        minutesState,
-        hoursState,
-        daysState,
-        monthsState,
-        yearsState,
-        timezoneState,
-        weekDaysState
+        this.minutesState,
+        this.hoursState,
+        this.daysState,
+        this.monthsState,
+        this.yearsState,
+        this.timezoneState,
+        this.weekDaysState
     ).map {
-        "${this.secondsState.value} ${minutesState.value} ${hoursState.value} ${daysState.value} ${monthsState.value}${yearsState.value.krontabPart()}${timezoneState.value.krontabPart("o")}${weekDaysState.value.krontabPart("w")}"
-    }.stateIn(scope, SharingStarted.Eagerly, "* * * * *")
+        "${secondsState.value} ${this.minutesState.value} ${this.hoursState.value} ${this.daysState.value} ${this.monthsState.value}${this.yearsState.value.krontabPart()}${this.timezoneState.value.krontabPart("o")}${this.weekDaysState.value.krontabPart("w")}"
+    }.stateIn(scope, SharingStarted.Eagerly, initialStateOfKrontab ?: "* * * * *")
     val krontabTemplateState = krontabTemplateStateFlow.asComposeState(scope)
 
-    val scheduleItemsState = MutableStateFlow(10)
-    val scheduleUIItemsState = scheduleItemsState.asComposeState(scope)
+    val scheduleItemsState = FlowState(10)
 
     val presets = listOf(
-        "Every second" to "* * * * *"
+        "Every second" to "* * * * *",
+        "Every minute" to "0 * * * *",
+        "Every hour" to "0 0 * * *",
+        "Every day" to "0 0 0 * *",
+        "Each 15-th minutes" to "0 0/15 * * *",
     )
 
     private val _schedule = mutableStateListOf<DateTime>()
@@ -132,21 +127,21 @@ class MainViewModel(
 
         runCatching {
             secondsState.value = splitted.removeFirst()
-            minutesState.value = splitted.removeFirst()
-            hoursState.value = splitted.removeFirst()
-            daysState.value = splitted.removeFirst()
-            monthsState.value = splitted.removeFirst()
+            this.minutesState.value = splitted.removeFirst()
+            this.hoursState.value = splitted.removeFirst()
+            this.daysState.value = splitted.removeFirst()
+            this.monthsState.value = splitted.removeFirst()
             while (splitted.isNotEmpty()) {
                 val it = splitted.removeFirst()
                 when {
                     it.endsWith("o") -> {
-                        timezoneState.value = it.dropLast(1)
+                        this.timezoneState.value = it.dropLast(1)
                     }
                     it.endsWith("w") -> {
-                        weekDaysState.value = it.dropLast(1)
+                        this.weekDaysState.value = it.dropLast(1)
                     }
                     else -> {
-                        yearsState.value = it
+                        this.yearsState.value = it
                     }
                 }
             }

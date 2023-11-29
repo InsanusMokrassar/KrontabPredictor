@@ -47,6 +47,7 @@ fun main() {
         Style(KrontabDateTimeGridsStylesheet)
         Style(StandardBlockStylesheet)
         Style(KrontabInstructionsStylesheet)
+        Style(KrontabPresetsStylesheet)
         DefaultBlock("Krontab parts") {
             Div({ classes(KrontabPartsStylesheet.container) }) {
                 @Composable
@@ -87,13 +88,13 @@ fun main() {
                     }
                 }
                 DrawInput("Seconds", state = viewModel.secondsState.value, onChange = { viewModel.secondsState.value = it })
-                DrawInput("Minutes", state = viewModel.minutesUIState.value, onChange = { viewModel.minutesState.value = it })
-                DrawInput("Hours", state = viewModel.hoursUIState.value, onChange = { viewModel.hoursState.value = it })
-                DrawInput("Days", state = viewModel.daysUIState.value, onChange = { viewModel.daysState.value = it })
-                DrawInput("Months", state = viewModel.monthsUIState.value, onChange = { viewModel.monthsState.value = it })
-                DrawInput("Years", state = viewModel.yearsUIState.value, onChange = { viewModel.yearsState.value = it })
-                DrawInput("Timezone", state = viewModel.timezoneUIState.value, numberTypeRange = 0 until (60 * 24), onChange = { viewModel.timezoneState.value = it })
-                DrawInput("Week\u00a0Day", state = viewModel.weekDaysUIState.value, onChange = { viewModel.weekDaysState.value = it })
+                DrawInput("Minutes", state = viewModel.minutesState.value, onChange = { viewModel.minutesState.value = it })
+                DrawInput("Hours", state = viewModel.hoursState.value, onChange = { viewModel.hoursState.value = it })
+                DrawInput("Days", state = viewModel.daysState.value, onChange = { viewModel.daysState.value = it })
+                DrawInput("Months", state = viewModel.monthsState.value, onChange = { viewModel.monthsState.value = it })
+                DrawInput("Years", state = viewModel.yearsState.value, onChange = { viewModel.yearsState.value = it })
+                DrawInput("Timezone", state = viewModel.timezoneState.value, numberTypeRange = 0 until (60 * 24), onChange = { viewModel.timezoneState.value = it })
+                DrawInput("Week\u00a0Day", state = viewModel.weekDaysState.value, onChange = { viewModel.weekDaysState.value = it })
             }
         }
         DefaultBlock("Krontab string") {
@@ -104,6 +105,15 @@ fun main() {
                     value(viewModel.krontabTemplateState.value)
                     classes(KrontabCommonStylesheet.input)
                     readOnly()
+                }
+            }
+        }
+        DefaultBlock("Output date/times") {
+            Div({ classes(KrontabDateTimeGridsStylesheet.container) }) {
+                viewModel.schedule.forEach {
+                    Label(attrs = { classes(KrontabDateTimeGridsStylesheet.dateTime) }) {
+                        Text(DateTimeFormatter.local.format(it.local))
+                    }
                 }
             }
         }
@@ -123,11 +133,21 @@ fun main() {
                 }
             }
         }
-        DefaultBlock("Output date/times") {
-            Div({ classes(KrontabDateTimeGridsStylesheet.container) }) {
-                viewModel.schedule.forEach {
-                    Label(attrs = { classes(KrontabDateTimeGridsStylesheet.dateTime) }) {
-                        Text(DateTimeFormatter.local.format(it.local))
+        DefaultBlock("Presets") {
+            Div({ classes(KrontabPresetsStylesheet.container) }) {
+                Div({ classes(KrontabPresetsStylesheet.containerItem) }) {
+                    B { Text("Preset") }
+                    B { Text("Krontab") }
+                }
+                viewModel.presets.forEach {
+                    Div({
+                        classes(KrontabPresetsStylesheet.containerItem, KrontabPresetsStylesheet.containerItemSelectable)
+                        onClick { _ ->
+                            viewModel.onSetKrontabState(it.second)
+                        }
+                    }) {
+                        Label { Text(it.first) }
+                        Label { Text(it.second) }
                     }
                 }
             }
