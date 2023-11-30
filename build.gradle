@@ -66,6 +66,7 @@ kotlin {
                 api libs.kotlin.serialization
                 api libs.krontab
                 api libs.microutils.common.compose
+                api libs.microutils.coroutines.compose
                 api libs.navigation
                 api(compose.runtime)
             }
